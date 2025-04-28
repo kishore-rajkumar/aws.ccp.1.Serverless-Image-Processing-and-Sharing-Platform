@@ -1,0 +1,19 @@
+graph LR
+    A[User] --> B[CloudFront]
+    B --> C[S3 - Static Website]
+    C -- Upload Image --> D[API Gateway - /upload]
+    D --> E[Lambda - Image Upload]
+    E -- Store Original --> F[S3 - Original Images]
+    E -- Store Metadata --> G[DynamoDB]
+    A --> H[Apply Filter - via UI]
+    H --> I[API Gateway - /process]
+    I --> J[Lambda - Image Processing]
+    J -- Retrieve Original --> F
+    J -- Process Image --> K[S3 - Processed Images]
+    J -- Update Metadata --> G
+    A --> L[Share Link]
+    L --> M[API Gateway - /share/id]
+    M --> N[Lambda - Retrieve Image Info]
+    N -- Get Image Path --> G
+    N -- Retrieve Image --> K
+    K -- Serve Image --> B
